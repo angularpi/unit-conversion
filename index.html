@@ -145,6 +145,124 @@
                 </div>
             </div>
         </div>
+
+        <div class="converter-section">
+            <h2>Power Density</h2>
+            <div class="converter">
+                <div class="input-group">
+                    <input type="number" id="power-input" placeholder="Enter value">
+                    <select id="power-from">
+                        <option value="w_sqft">W/ft²</option>
+                        <option value="w_sqm">W/m²</option>
+                        <option value="kw_rack">kW/rack</option>
+                        <option value="btu_sqft_hr">BTU/ft²/hr</option>
+                        <option value="tons_sqft">Tons/1000ft²</option>
+                        <option value="w_sqin">W/in²</option>
+                    </select>
+                </div>
+                <div class="arrow">→</div>
+                <div class="input-group">
+                    <input type="number" id="power-output" readonly>
+                    <select id="power-to">
+                        <option value="w_sqm">W/m²</option>
+                        <option value="w_sqft">W/ft²</option>
+                        <option value="kw_rack">kW/rack</option>
+                        <option value="btu_sqft_hr">BTU/ft²/hr</option>
+                        <option value="tons_sqft">Tons/1000ft²</option>
+                        <option value="w_sqin">W/in²</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="converter-section">
+            <h2>Pressure</h2>
+            <div class="converter">
+                <div class="input-group">
+                    <input type="number" id="pressure-input" placeholder="Enter value">
+                    <select id="pressure-from">
+                        <option value="pa">Pascal (Pa)</option>
+                        <option value="in_wc">in H₂O</option>
+                        <option value="mm_wc">mm H₂O</option>
+                        <option value="psi">PSI</option>
+                        <option value="bar">Bar</option>
+                        <option value="kpa">kPa</option>
+                        <option value="mmhg">mmHg</option>
+                    </select>
+                </div>
+                <div class="arrow">→</div>
+                <div class="input-group">
+                    <input type="number" id="pressure-output" readonly>
+                    <select id="pressure-to">
+                        <option value="in_wc">in H₂O</option>
+                        <option value="pa">Pascal (Pa)</option>
+                        <option value="mm_wc">mm H₂O</option>
+                        <option value="psi">PSI</option>
+                        <option value="bar">Bar</option>
+                        <option value="kpa">kPa</option>
+                        <option value="mmhg">mmHg</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="converter-section">
+            <h2>Energy & Cooling</h2>
+            <div class="converter">
+                <div class="input-group">
+                    <input type="number" id="energy-input" placeholder="Enter value">
+                    <select id="energy-from">
+                        <option value="btu_hr">BTU/hr</option>
+                        <option value="tons">Tons (cooling)</option>
+                        <option value="kw">kW (thermal)</option>
+                        <option value="w">W (thermal)</option>
+                        <option value="kcal_hr">kcal/hr</option>
+                        <option value="hp">Horsepower</option>
+                    </select>
+                </div>
+                <div class="arrow">→</div>
+                <div class="input-group">
+                    <input type="number" id="energy-output" readonly>
+                    <select id="energy-to">
+                        <option value="tons">Tons (cooling)</option>
+                        <option value="btu_hr">BTU/hr</option>
+                        <option value="kw">kW (thermal)</option>
+                        <option value="w">W (thermal)</option>
+                        <option value="kcal_hr">kcal/hr</option>
+                        <option value="hp">Horsepower</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="converter-section">
+            <h2>Humidity</h2>
+            <div class="converter">
+                <div class="input-group">
+                    <input type="number" id="humidity-input" placeholder="Enter value">
+                    <select id="humidity-from">
+                        <option value="rh">Relative Humidity (%)</option>
+                        <option value="abs_g_m3">g/m³ (absolute)</option>
+                        <option value="abs_gr_lb">grains/lb</option>
+                        <option value="dewpoint_c">Dew Point (°C)</option>
+                        <option value="dewpoint_f">Dew Point (°F)</option>
+                        <option value="mixing_ratio">Mixing Ratio (g/kg)</option>
+                    </select>
+                </div>
+                <div class="arrow">→</div>
+                <div class="input-group">
+                    <input type="number" id="humidity-output" readonly>
+                    <select id="humidity-to">
+                        <option value="abs_g_m3">g/m³ (absolute)</option>
+                        <option value="rh">Relative Humidity (%)</option>
+                        <option value="abs_gr_lb">grains/lb</option>
+                        <option value="dewpoint_c">Dew Point (°C)</option>
+                        <option value="dewpoint_f">Dew Point (°F)</option>
+                        <option value="mixing_ratio">Mixing Ratio (g/kg)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
