@@ -1,652 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Unit Converter</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
-
-        .main-content {
-            padding: 40px 30px;
-        }
-
-        .conversion-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .conversion-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .conversion-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .conversion-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .conversion-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-icon {
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.8rem;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .input-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .input-field {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .unit-select {
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-            background: #f8f9fa;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-
-        .unit-select:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-        }
-
-        .convert-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .convert-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .convert-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .result {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
-            font-size: 1.1rem;
-            font-weight: 600;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-        }
-
-        .result.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .history-section {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            margin-top: 30px;
-        }
-
-        .history-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .history-item {
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-            transition: all 0.3s ease;
-        }
-
-        .history-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .error {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .conversion-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .input-row {
-                flex-direction: column;
-            }
-            
-            .unit-select {
-                min-width: 100%;
-            }
-        }
-    </style>
+    <title>Unit Converter</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Universal Unit Converter</h1>
-            <p>Convert between different units with precision and ease</p>
-        </div>
+        <h1>Unit Converter</h1>
 
-        <div class="main-content">
-            <div class="conversion-grid">
-                <!-- Length Conversion -->
-                <div class="conversion-card">
-                    <div class="card-title">
-                        <div class="card-icon">📏</div>
-                        Length Conversion
-                    </div>
-                    <div class="input-group">
-                        <div class="input-row">
-                            <input type="number" class="input-field" id="length-input" placeholder="Enter value">
-                            <select class="unit-select" id="length-from">
-                                <option value="meter">Meters</option>
-                                <option value="kilometer">Kilometers</option>
-                                <option value="centimeter">Centimeters</option>
-                                <option value="millimeter">Millimeters</option>
-                                <option value="inch">Inches</option>
-                                <option value="foot">Feet</option>
-                                <option value="yard">Yards</option>
-                                <option value="mile">Miles</option>
-                            </select>
-                        </div>
-                        <div class="input-row">
-                            <input type="number" class="input-field" id="length-output" placeholder="Converted value" readonly>
-                            <select class="unit-select" id="length-to">
-                                <option value="meter">Meters</option>
-                                <option value="kilometer">Kilometers</option>
-                                <option value="centimeter">Centimeters</option>
-                                <option value="millimeter">Millimeters</option>
-                                <option value="inch">Inches</option>
-                                <option value="foot">Feet</option>
-                                <option value="yard">Yards</option>
-                                <option value="mile">Miles</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="convert-btn" onclick="convertUnits('length')">Convert Length</button>
-                    <div class="result" id="length-result"></div>
+        <div class="converter-section">
+            <h2>Length</h2>
+            <div class="converter">
+                <div class="input-group">
+                    <input type="number" id="length-input" placeholder="Enter value">
+                    <select id="length-from">
+                        <option value="m">Meters</option>
+                        <option value="ft">Feet</option>
+                        <option value="in">Inches</option>
+                        <option value="cm">Centimeters</option>
+                        <option value="km">Kilometers</option>
+                        <option value="mi">Miles</option>
+                    </select>
                 </div>
-
-                <!-- Weight Conversion -->
-                <div class="conversion-card">
-                    <div class="card-title">
-                        <div class="card-icon">⚖️</div>
-                        Weight Conversion
-                    </div>
-                    <div class="input-group">
-                        <div class="input-row">
-                            <input type="number" class="input-field" id="weight-input" placeholder="Enter value">
-                            <select class="unit-select" id="weight-from">
-                                <option value="kilogram">Kilograms</option>
-                                <option value="gram">Grams</option>
-                                <option value="pound">Pounds</option>
-                                <option value="ounce">Ounces</option>
-                                <option value="ton">Tons</option>
-                                <option value="stone">Stones</option>
-                            </select>
-                        </div>
-                        <div class="input-row">
-                            <input type="number" class="input-field" id="weight-output" placeholder="Converted value" readonly>
-                            <select class="unit-select" id="weight-to">
-                                <option value="kilogram">Kilograms</option>
-                                <option value="gram">Grams</option>
-                                <option value="pound">Pounds</option>
-                                <option value="ounce">Ounces</option>
-                                <option value="ton">Tons</option>
-                                <option value="stone">Stones</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="convert-btn" onclick="convertUnits('weight')">Convert Weight</button>
-                    <div class="result" id="weight-result"></div>
-                </div>
-
-                <!-- Temperature Conversion -->
-                <div class="conversion-card">
-                    <div class="card-title">
-                        <div class="card-icon">🌡️</div>
-                        Temperature Conversion
-                    </div>
-                    <div class="input-group">
-                        <div class="input-row">
-                            <input type="number" class="input-field" id="temperature-input" placeholder="Enter value">
-                            <select class="unit-select" id="temperature-from">
-                                <option value="celsius">Celsius</option>
-                                <option value="fahrenheit">Fahrenheit</option>
-                                <option value="kelvin">Kelvin</option>
-                                <option value="rankine">Rankine</option>
-                            </select>
-                        </div>
-                        <div class="input-row">
-                            <input type="number" class="input-field" id="temperature-output" placeholder="Converted value" readonly>
-                            <select class="unit-select" id="temperature-to">
-                                <option value="celsius">Celsius</option>
-                                <option value="fahrenheit">Fahrenheit</option>
-                                <option value="kelvin">Kelvin</option>
-                                <option value="rankine">Rankine</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="convert-btn" onclick="convertUnits('temperature')">Convert Temperature</button>
-                    <div class="result" id="temperature-result"></div>
-                </div>
-
-                <!-- Volume Conversion -->
-                <div class="conversion-card">
-                    <div class="card-title">
-                        <div class="card-icon">🫗</div>
-                        Volume Conversion
-                    </div>
-                    <div class="input-group">
-                        <div class="input-row">
-                            <input type="number" class="input-field" id="volume-input" placeholder="Enter value">
-                            <select class="unit-select" id="volume-from">
-                                <option value="liter">Liters</option>
-                                <option value="milliliter">Milliliters</option>
-                                <option value="gallon">Gallons</option>
-                                <option value="quart">Quarts</option>
-                                <option value="pint">Pints</option>
-                                <option value="cup">Cups</option>
-                                <option value="fluid_ounce">Fluid Ounces</option>
-                                <option value="tablespoon">Tablespoons</option>
-                                <option value="teaspoon">Teaspoons</option>
-                            </select>
-                        </div>
-                        <div class="input-row">
-                            <input type="number" class="input-field" id="volume-output" placeholder="Converted value" readonly>
-                            <select class="unit-select" id="volume-to">
-                                <option value="liter">Liters</option>
-                                <option value="milliliter">Milliliters</option>
-                                <option value="gallon">Gallons</option>
-                                <option value="quart">Quarts</option>
-                                <option value="pint">Pints</option>
-                                <option value="cup">Cups</option>
-                                <option value="fluid_ounce">Fluid Ounces</option>
-                                <option value="tablespoon">Tablespoons</option>
-                                <option value="teaspoon">Teaspoons</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="convert-btn" onclick="convertUnits('volume')">Convert Volume</button>
-                    <div class="result" id="volume-result"></div>
+                <div class="arrow">→</div>
+                <div class="input-group">
+                    <input type="number" id="length-output" readonly>
+                    <select id="length-to">
+                        <option value="ft">Feet</option>
+                        <option value="m">Meters</option>
+                        <option value="in">Inches</option>
+                        <option value="cm">Centimeters</option>
+                        <option value="km">Kilometers</option>
+                        <option value="mi">Miles</option>
+                    </select>
                 </div>
             </div>
+        </div>
 
-            <!-- Conversion History -->
-            <div class="history-section">
-                <div class="history-title">Recent Conversions</div>
-                <div class="history-list" id="history-list">
-                    <div style="text-align: center; color: #666; padding: 20px;">
-                        No conversions yet. Start converting to see your history!
-                    </div>
+        <div class="converter-section">
+            <h2>Weight</h2>
+            <div class="converter">
+                <div class="input-group">
+                    <input type="number" id="weight-input" placeholder="Enter value">
+                    <select id="weight-from">
+                        <option value="kg">Kilograms</option>
+                        <option value="lb">Pounds</option>
+                        <option value="oz">Ounces</option>
+                        <option value="g">Grams</option>
+                    </select>
+                </div>
+                <div class="arrow">→</div>
+                <div class="input-group">
+                    <input type="number" id="weight-output" readonly>
+                    <select id="weight-to">
+                        <option value="lb">Pounds</option>
+                        <option value="kg">Kilograms</option>
+                        <option value="oz">Ounces</option>
+                        <option value="g">Grams</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="converter-section">
+            <h2>Temperature</h2>
+            <div class="converter">
+                <div class="input-group">
+                    <input type="number" id="temp-input" placeholder="Enter value">
+                    <select id="temp-from">
+                        <option value="c">Celsius</option>
+                        <option value="f">Fahrenheit</option>
+                        <option value="k">Kelvin</option>
+                    </select>
+                </div>
+                <div class="arrow">→</div>
+                <div class="input-group">
+                    <input type="number" id="temp-output" readonly>
+                    <select id="temp-to">
+                        <option value="f">Fahrenheit</option>
+                        <option value="c">Celsius</option>
+                        <option value="k">Kelvin</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="converter-section">
+            <h2>Volume</h2>
+            <div class="converter">
+                <div class="input-group">
+                    <input type="number" id="volume-input" placeholder="Enter value">
+                    <select id="volume-from">
+                        <option value="l">Liters</option>
+                        <option value="gal">Gallons (US)</option>
+                        <option value="ml">Milliliters</option>
+                        <option value="cup">Cups</option>
+                        <option value="fl_oz">Fluid Ounces</option>
+                    </select>
+                </div>
+                <div class="arrow">→</div>
+                <div class="input-group">
+                    <input type="number" id="volume-output" readonly>
+                    <select id="volume-to">
+                        <option value="gal">Gallons (US)</option>
+                        <option value="l">Liters</option>
+                        <option value="ml">Milliliters</option>
+                        <option value="cup">Cups</option>
+                        <option value="fl_oz">Fluid Ounces</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="converter-section">
+            <h2>Volumetric Flow</h2>
+            <div class="converter">
+                <div class="input-group">
+                    <input type="number" id="flow-input" placeholder="Enter value">
+                    <select id="flow-from">
+                        <option value="cfm">CFM (ft³/min)</option>
+                        <option value="l_min">L/min</option>
+                        <option value="l_s">L/s</option>
+                        <option value="m3_h">m³/h</option>
+                        <option value="gpm">GPM (gal/min)</option>
+                        <option value="cfs">CFS (ft³/s)</option>
+                        <option value="ml_min">mL/min</option>
+                    </select>
+                </div>
+                <div class="arrow">→</div>
+                <div class="input-group">
+                    <input type="number" id="flow-output" readonly>
+                    <select id="flow-to">
+                        <option value="l_min">L/min</option>
+                        <option value="cfm">CFM (ft³/min)</option>
+                        <option value="l_s">L/s</option>
+                        <option value="m3_h">m³/h</option>
+                        <option value="gpm">GPM (gal/min)</option>
+                        <option value="cfs">CFS (ft³/s)</option>
+                        <option value="ml_min">mL/min</option>
+                    </select>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Configuration for AWS API Gateway endpoint
-        const API_ENDPOINT = 'https://your-api-gateway-endpoint.amazonaws.com/prod/convert';
-        
-        // Store conversion history
-        let conversionHistory = [];
-
-        // Convert units using AWS Lambda via API Gateway
-        async function convertUnits(type) {
-            const inputValue = document.getElementById(`${type}-input`).value;
-            const fromUnit = document.getElementById(`${type}-from`).value;
-            const toUnit = document.getElementById(`${type}-to`).value;
-            const outputField = document.getElementById(`${type}-output`);
-            const resultDiv = document.getElementById(`${type}-result`);
-            const convertBtn = document.querySelector(`button[onclick="convertUnits('${type}')"]`);
-
-            // Validation
-            if (!inputValue || inputValue === '') {
-                showError(resultDiv, 'Please enter a value to convert');
-                return;
-            }
-
-            if (fromUnit === toUnit) {
-                outputField.value = inputValue;
-                showResult(resultDiv, `${inputValue} ${fromUnit} = ${inputValue} ${toUnit}`);
-                addToHistory(type, inputValue, fromUnit, inputValue, toUnit);
-                return;
-            }
-
-            // Show loading state
-            convertBtn.disabled = true;
-            convertBtn.innerHTML = '<span class="loading"></span> Converting...';
-
-            try {
-                const response = await fetch(API_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        type: type,
-                        value: parseFloat(inputValue),
-                        fromUnit: fromUnit,
-                        toUnit: toUnit
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-
-                // Display result
-                const convertedValue = data.result;
-                outputField.value = convertedValue;
-                showResult(resultDiv, `${inputValue} ${fromUnit} = ${convertedValue} ${toUnit}`);
-                addToHistory(type, inputValue, fromUnit, convertedValue, toUnit);
-
-            } catch (error) {
-                console.error('Conversion error:', error);
-                showError(resultDiv, 'Conversion failed. Please try again.');
-            } finally {
-                // Reset button state
-                convertBtn.disabled = false;
-                convertBtn.innerHTML = `Convert ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-            }
-        }
-
-        // Show result with animation
-        function showResult(resultDiv, message) {
-            resultDiv.className = 'result';
-            resultDiv.innerHTML = message;
-            setTimeout(() => {
-                resultDiv.classList.add('show');
-            }, 50);
-        }
-
-        // Show error message
-        function showError(resultDiv, message) {
-            resultDiv.className = 'error';
-            resultDiv.innerHTML = message;
-            setTimeout(() => {
-                resultDiv.classList.add('show');
-            }, 50);
-        }
-
-        // Add conversion to history
-        function addToHistory(type, inputValue, fromUnit, outputValue, toUnit) {
-            const historyItem = {
-                type: type,
-                input: inputValue,
-                fromUnit: fromUnit,
-                output: outputValue,
-                toUnit: toUnit,
-                timestamp: new Date().toLocaleString()
-            };
-
-            conversionHistory.unshift(historyItem);
-            
-            // Keep only last 5 conversions
-            if (conversionHistory.length > 5) {
-                conversionHistory.pop();
-            }
-
-            updateHistoryDisplay();
-        }
-
-        // Update history display
-        function updateHistoryDisplay() {
-            const historyList = document.getElementById('history-list');
-            
-            if (conversionHistory.length === 0) {
-                historyList.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">No conversions yet. Start converting to see your history!</div>';
-                return;
-            }
-
-            historyList.innerHTML = conversionHistory.map(item => `
-                <div class="history-item">
-                    <strong>${item.type.charAt(0).toUpperCase() + item.type.slice(1)}:</strong> 
-                    ${item.input} ${item.fromUnit} = ${item.output} ${item.toUnit}
-                    <div style="font-size: 0.8em; color: #666; margin-top: 5px;">${item.timestamp}</div>
-                </div>
-            `).join('');
-        }
-
-        // Add real-time conversion for better UX
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('.input-field[id$="-input"]');
-            const selects = document.querySelectorAll('.unit-select');
-
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    const type = this.id.split('-')[0];
-                    if (this.value) {
-                        // Optional: Auto-convert as user types (with debounce)
-                        clearTimeout(this.timeout);
-                        this.timeout = setTimeout(() => {
-                            // Uncomment the line below for real-time conversion
-                            // convertUnits(type);
-                        }, 1000);
-                    }
-                });
-            });
-
-            selects.forEach(select => {
-                select.addEventListener('change', function() {
-                    const type = this.id.split('-')[0];
-                    const inputField = document.getElementById(`${type}-input`);
-                    if (inputField.value) {
-                        // Optional: Auto-convert when unit changes
-                        // convertUnits(type);
-                    }
-                });
-            });
-        });
-
-        // Handle Enter key press
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const target = e.target;
-                if (target.classList.contains('input-field')) {
-                    const type = target.id.split('-')[0];
-                    convertUnits(type);
-                }
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
+
 </html>
